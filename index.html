@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관계상의 정서적 욕구 파악 검사</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="테마 전환">
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M6.34 17.66l-1.41 1.41"></path><path d="M19.07 4.93l-1.41 1.41"></path></svg>
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+    </button>
+
+    <div class="app-container">
+        <!-- 1. Intro Section -->
+        <section id="intro-section" class="active">
+            <div class="card fade-in">
+                <div class="badge">E.N.A</div>
+                <h1 class="main-title">관계상의<br><span class="highlight">정서적 욕구</span> 파악 검사</h1>
+                <p class="description">
+                    본 검사는 대인관계 및 일상생활에서 나타나는 여러분의 정서적 욕구를 파악하기 위한 도구입니다. 총 70문항(7개 단계 × 10문항)에 대해 자신에게 해당하는 정도를 솔직하게 응답해 주세요. 각 단계별 질문은 그리드 테이블로 한눈에 응답하실 수 있습니다.
+                </p>
+                
+                <div class="user-info-form">
+                    <div class="input-group">
+                        <label for="username">이름 (또는 닉네임)</label>
+                        <input type="text" id="username" placeholder="이름을 입력해주세요" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="button-group-vertical">
+                    <button id="start-btn" class="btn btn-primary">검사 시작하기</button>
+                    <button id="resume-btn" class="btn btn-secondary hidden">이어서 진행하기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Survey Section -->
+        <section id="survey-section">
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="progress-text-container">
+                    <span id="progress-text">0 / 70문항 완료</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+            </div>
+
+            <div id="survey-single-card" class="card survey-single-card">
+                <div class="survey-header">
+                    <span id="category-badge" class="category-badge"></span>
+                    <span id="page-indicator" class="page-indicator">1 / 70</span>
+                </div>
+
+                <div class="question-body">
+                    <p id="question-text" class="question-text"></p>
+                </div>
+
+                <div class="single-options-wrapper">
+                    <div class="scale-endpoint-labels">
+                        <span>매우 그렇지 않다</span>
+                        <span>매우 그러하다</span>
+                    </div>
+                    <div id="options-row" class="single-options-row">
+                        <!-- Dynamically rendered by JS -->
+                    </div>
+                </div>
+
+                <div class="navigation-controls">
+                    <button id="prev-btn" class="btn-nav" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>
+                        이전
+                    </button>
+                    <span id="page-step-indicator">1 / 70</span>
+                    <button id="next-btn" class="btn-nav" disabled>
+                        다음
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Result Section -->
+        <section id="result-section">
+            <div class="result-header text-center">
+                <div class="badge">E.N.A REPORT</div>
+                <h1 class="result-title"><span id="result-username" class="highlight-user">사용자</span> 님의 정서적 욕구 프로파일</h1>
+                <p class="result-subtitle">7가지 정서적 욕구 분석 보고서입니다.</p>
+            </div>
+
+            <div class="grid-container">
+                <!-- Radar Chart Card -->
+                <div class="card chart-card fade-in">
+                    <h3 class="card-title text-center">정서적 욕구 7각 다이어그램</h3>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Needs Summary List -->
+                <div class="card details-card fade-in">
+                    <h3 class="card-title">욕구별 상세 점수</h3>
+                    <div id="scores-list" class="scores-list">
+                        <!-- Dynamic scores will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Interpretations -->
+            <div class="card interpretation-card fade-in">
+                <h3 class="card-title"><svg class="title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.886H3.82l4.982 3.62L6.89 18.39 12 14.77l5.11 3.62-1.912-5.886 4.982-3.62h-6.268Z"></path></svg> 주요 욕구 분석 (내면의 핵심 동기)</h3>
+                
+                <div class="primary-needs-container">
+                    <div class="primary-need-box positive">
+                        <h4 id="primary-need-title-1">1순위 주요 욕구</h4>
+                        <p id="primary-need-desc-1">로딩 중...</p>
+                    </div>
+                    <div class="primary-need-box warning">
+                        <h4 id="primary-need-title-2">2순위 주요 욕구</h4>
+                        <p id="primary-need-desc-2">로딩 중...</p>
+                    </div>
+                </div>
+
+                <div class="summary-reflection">
+                    <h4>정서적 욕구 균형을 위한 제안</h4>
+                    <p id="reflection-advice">로딩 중...</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group-horizontal text-center">
+                <button id="copy-result-btn" class="btn btn-secondary">결과 복사하기</button>
+                <button id="print-btn" class="btn btn-secondary">PDF로 저장 / 인쇄</button>
+                <button id="restart-btn" class="btn btn-primary">다시 검사하기</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Script File -->
+    <script src="app.js"></script>
+</body>
+</html>
